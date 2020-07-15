@@ -11,9 +11,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.luv2code.EmployeeApp.entity.Employee;
+import com.luv2code.EmployeeApp.entity.Manager;
 
 @Repository
-public class EmployeeDAOImpl implements EmployeeDao {
+public class EmployeeDAOImpl implements EmployeeDao , ManagerDao{
 
 	//define field for entitymanager
 	private EntityManager entityManager;
@@ -58,6 +59,28 @@ public class EmployeeDAOImpl implements EmployeeDao {
 		Session curSession = entityManager.unwrap(Session.class);
 		Employee theEmployee = curSession.get(Employee.class, theId);
 		return theEmployee;
+	}
+
+	@Override
+	public Manager saveMgr(Manager theManager) {
+		Session curSession = entityManager.unwrap(Session.class);
+		curSession.save(theManager);	
+		return theManager;
+	}
+
+	@Override
+	public Manager login(Manager theManager) {
+		Session curSession = entityManager.unwrap(Session.class);
+		String managerEmail = theManager.email;
+		String managerPassword = theManager.password;
+		Manager mgr = curSession.get(Manager.class, managerEmail);
+		System.out.println("...."+mgr);
+		if(mgr.email.equals(managerEmail) && mgr.password.equals(managerPassword)) {
+			System.out.println("Login Successful");
+		}else {
+			System.out.println("Login failed");
+		}
+		return theManager;
 	}
 
 }
